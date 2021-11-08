@@ -26,6 +26,9 @@
 		"sqlworkspace-WorkspaceDefaultSqlServer_connectionString": {
 			"value": ""
 		},
+		"Ftp_LS_password": {
+			"value": ""
+		},
 		"AzureDataLakeStorageLS_properties_typeProperties_url": {
 			"value": "https://pracdeep123.dfs.core.windows.net/"
 		},
@@ -43,6 +46,12 @@
 		},
 		"sqlworkspace-WorkspaceDefaultStorage_properties_typeProperties_url": {
 			"value": "https://pracdeep123.dfs.core.windows.net"
+		},
+		"Ftp_LS_properties_typeProperties_host": {
+			"value": "test.rebex.net"
+		},
+		"Ftp_LS_properties_typeProperties_userName": {
+			"value": "demo"
 		}
 	}
 }
