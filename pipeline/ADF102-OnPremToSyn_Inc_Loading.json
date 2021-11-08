@@ -1,0 +1,158 @@
+{
+	"name": "ADF102-OnPremToSyn_Inc_Loading",
+	"properties": {
+		"activities": [
+			{
+				"name": "Lookup from OnPremise Table",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"sqlReaderQuery": "select * from dbo.aw_lookup",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "SqlServerDS",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "Iterate lookup tables",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Lookup from OnPremise Table",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Lookup from OnPremise Table').output.value",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Copy to Stage",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "SqlServerSource",
+									"sqlReaderQuery": {
+										"value": "@select * from item()",
+										"type": "Expression"
+									},
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "AzureSqlSink",
+									"tableOption": "autoCreate",
+									"disableMetricsCollection": false
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "SqlServerDS",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "empAzureDB_DS",
+									"type": "DatasetReference",
+									"parameters": {
+										"tablename": {
+											"value": "@item().dest_table",
+											"type": "Expression"
+										},
+										"schemaname": {
+											"value": "@item().stg_schema",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						},
+						{
+							"name": "Exec Transformation",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [
+								{
+									"activity": "Copy to Stage",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[dbo].[cleanUpAW]",
+								"storedProcedureParameters": {
+									"schema": {
+										"value": {
+											"value": "@item().stg_schema",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"table": {
+										"value": {
+											"value": "@item().dest_table",
+											"type": "Expression"
+										},
+										"type": "String"
+									}
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "empAzureDB_LS",
+								"type": "LinkedServiceReference"
+							}
+						}
+					]
+				}
+			}
+		],
+		"annotations": []
+	}
+}
