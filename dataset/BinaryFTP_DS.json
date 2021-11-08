@@ -1,0 +1,17 @@
+{
+	"name": "BinaryFTP_DS",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Ftp_LS",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "FtpServerLocation",
+				"fileName": "readme.txt"
+			}
+		}
+	}
+}
