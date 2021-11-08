@@ -1,0 +1,48 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"workspaceName": {
+			"value": "sqlworkspace"
+		},
+		"AzureBlobStorageLS_connectionString": {
+			"value": ""
+		},
+		"AzureDataLakeStorageLS_accountKey": {
+			"value": ""
+		},
+		"AzureSynapseAnalyticsLS_connectionString": {
+			"value": ""
+		},
+		"SapTableLS_password": {
+			"value": ""
+		},
+		"SqlServerLS_connectionString": {
+			"value": ""
+		},
+		"empAzureDB_LS_connectionString": {
+			"value": ""
+		},
+		"sqlworkspace-WorkspaceDefaultSqlServer_connectionString": {
+			"value": ""
+		},
+		"AzureDataLakeStorageLS_properties_typeProperties_url": {
+			"value": "https://pracdeep123.dfs.core.windows.net/"
+		},
+		"SapTableLS_properties_typeProperties_clientId": {
+			"value": "201"
+		},
+		"SapTableLS_properties_typeProperties_userName": {
+			"value": "angupta"
+		},
+		"SapTableLS_properties_typeProperties_server": {
+			"value": "hss.cognitusconsulting.com"
+		},
+		"SapTableLS_properties_typeProperties_systemNumber": {
+			"value": "00"
+		},
+		"sqlworkspace-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"value": "https://pracdeep123.dfs.core.windows.net"
+		}
+	}
+}
