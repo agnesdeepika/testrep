@@ -125,6 +125,7 @@
 								"storeSettings": {
 									"type": "FtpReadSettings",
 									"recursive": true,
+									"wildcardFileName": "*.txt",
 									"enablePartitionDiscovery": false,
 									"useBinaryTransfer": true
 								},
@@ -143,15 +144,7 @@
 									"fileExtension": ".txt"
 								}
 							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
+							"enableStaging": false
 						},
 						"inputs": [
 							{
@@ -558,6 +551,28 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/BinaryFTP_DS')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Ftp_LS",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "FtpServerLocation",
+						"fileName": "readme.txt"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/Ftp_LS')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/CSVDS')]",
 			"type": "Microsoft.Synapse/workspaces/datasets",
 			"apiVersion": "2019-06-01-preview",
@@ -597,8 +612,7 @@
 				"type": "DelimitedText",
 				"typeProperties": {
 					"location": {
-						"type": "FtpServerLocation",
-						"fileName": "readme.txt"
+						"type": "FtpServerLocation"
 					},
 					"columnDelimiter": ",",
 					"escapeChar": "\\",
