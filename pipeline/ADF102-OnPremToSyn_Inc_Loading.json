@@ -70,6 +70,20 @@
 									"disableMetricsCollection": false
 								},
 								"enableStaging": false,
+								"logSettings": {
+									"enableCopyActivityLog": true,
+									"copyActivityLogSettings": {
+										"logLevel": "Info",
+										"enableReliableLogging": false
+									},
+									"logLocationSettings": {
+										"linkedServiceName": {
+											"referenceName": "AzureBlobStorageLS",
+											"type": "LinkedServiceReference"
+										},
+										"path": "blob01/DataLakeOutput"
+									}
+								},
 								"translator": {
 									"type": "TabularTranslator",
 									"typeConversion": true,
