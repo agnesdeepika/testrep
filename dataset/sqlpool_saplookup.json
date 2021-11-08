@@ -1,0 +1,50 @@
+{
+	"name": "sqlpool_saplookup",
+	"properties": {
+		"annotations": [],
+		"type": "SqlPoolTable",
+		"schema": [
+			{
+				"name": "src_table",
+				"type": "varchar"
+			},
+			{
+				"name": "tgt_schema",
+				"type": "varchar"
+			},
+			{
+				"name": "tgt_table",
+				"type": "varchar"
+			},
+			{
+				"name": "tgt_staging_table",
+				"type": "varchar"
+			},
+			{
+				"name": "process_flag",
+				"type": "varchar"
+			},
+			{
+				"name": "last_run",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "max_loaded_date",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			}
+		],
+		"typeProperties": {
+			"schema": "sap",
+			"table": "sap_lookup"
+		},
+		"sqlPool": {
+			"referenceName": "synapseSQLDB",
+			"type": "SqlPoolReference"
+		}
+	},
+	"type": "Microsoft.Synapse/workspaces/datasets"
+}

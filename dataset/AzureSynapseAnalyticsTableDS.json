@@ -1,0 +1,31 @@
+{
+	"name": "AzureSynapseAnalyticsTableDS",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSynapseAnalyticsLS",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"DWSchemaName": {
+				"type": "string"
+			},
+			"DWTableName": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlDWTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": {
+				"value": "@dataset().DWSchemaName",
+				"type": "Expression"
+			},
+			"table": {
+				"value": "@dataset().DWTableName",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.Synapse/workspaces/datasets"
+}

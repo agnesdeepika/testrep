@@ -1,0 +1,17 @@
+{
+	"name": "SQL script SAP TABLES",
+	"properties": {
+		"content": {
+			"query": "CREATE TABLE [sap].[sap_lookup]\n(\nsrc_table VARCHAR(25) NOT NULL,\ntgt_schema VARCHAR(20),\ntgt_table VARCHAR(20),\ntgt_staging_table VARCHAR(20),\nprocess_flag VARCHAR(20),\nlast_run DATETIME,\nmax_loaded_date DATETIME\n)\n\nINSERT INTO [sap].[sap_lookup] VALUES ('VBAP', 'sap', 'vbap_raw', 'vbap_stage',0,null,null);\nINSERT INTO [sap].[sap_lookup] VALUES ('VBAK', 'sap', 'vbak_raw', 'vbak_stage',0,null,null);\n\n\nselect * from [sap].[sap_lookup];",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "synapseSQLDB",
+				"poolName": "synapseSQLDB"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
