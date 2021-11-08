@@ -155,10 +155,6 @@
 									"typeProperties": {
 										"source": {
 											"type": "SqlServerSource",
-											"sqlReaderQuery": {
-												"value": "select * from @item()",
-												"type": "Expression"
-											},
 											"queryTimeout": "02:00:00",
 											"partitionOption": "None"
 										},
