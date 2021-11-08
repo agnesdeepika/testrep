@@ -9,8 +9,7 @@
 		"type": "DelimitedText",
 		"typeProperties": {
 			"location": {
-				"type": "FtpServerLocation",
-				"fileName": "readme.txt"
+				"type": "FtpServerLocation"
 			},
 			"columnDelimiter": ",",
 			"escapeChar": "\\",

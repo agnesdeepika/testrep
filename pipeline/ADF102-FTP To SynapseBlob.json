@@ -16,14 +16,16 @@
 				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "BinarySource",
+						"type": "DelimitedTextSource",
 						"storeSettings": {
 							"type": "FtpReadSettings",
 							"recursive": true,
+							"wildcardFileName": "*.txt",
+							"enablePartitionDiscovery": false,
 							"useBinaryTransfer": true
 						},
 						"formatSettings": {
-							"type": "BinaryReadSettings"
+							"type": "DelimitedTextReadSettings"
 						}
 					},
 					"sink": {
@@ -41,7 +43,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "BinaryFTP_DS",
+						"referenceName": "FTP_CSV_DS",
 						"type": "DatasetReference"
 					}
 				],
