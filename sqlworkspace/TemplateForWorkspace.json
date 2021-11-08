@@ -164,6 +164,20 @@
 											"disableMetricsCollection": false
 										},
 										"enableStaging": false,
+										"logSettings": {
+											"enableCopyActivityLog": true,
+											"copyActivityLogSettings": {
+												"logLevel": "Info",
+												"enableReliableLogging": false
+											},
+											"logLocationSettings": {
+												"linkedServiceName": {
+													"referenceName": "AzureBlobStorageLS",
+													"type": "LinkedServiceReference"
+												},
+												"path": "blob01/DataLakeOutput"
+											}
+										},
 										"translator": {
 											"type": "TabularTranslator",
 											"typeConversion": true,
@@ -263,7 +277,8 @@
 				"[concat(variables('workspaceId'), '/datasets/SqlServerDS')]",
 				"[concat(variables('workspaceId'), '/datasets/sqlServerDSWithParam')]",
 				"[concat(variables('workspaceId'), '/datasets/empAzureDB_DS')]",
-				"[concat(variables('workspaceId'), '/linkedServices/empAzureDB_LS')]"
+				"[concat(variables('workspaceId'), '/linkedServices/empAzureDB_LS')]",
+				"[concat(variables('workspaceId'), '/linkedServices/AzureBlobStorageLS')]"
 			]
 		},
 		{
