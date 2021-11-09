@@ -1,9 +1,20 @@
 {
 	"name": "SqlPoolTableDS",
 	"properties": {
+		"parameters": {
+			"table": {
+				"type": "string"
+			}
+		},
 		"annotations": [],
 		"type": "SqlPoolTable",
 		"schema": [],
+		"typeProperties": {
+			"table": {
+				"value": "@dataset().table",
+				"type": "Expression"
+			}
+		},
 		"sqlPool": {
 			"referenceName": "synapseSQLDB",
 			"type": "SqlPoolReference"
