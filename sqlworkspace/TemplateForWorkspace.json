@@ -219,8 +219,6 @@
 										},
 										"sink": {
 											"type": "SqlPoolSink",
-											"allowCopyCommand": true,
-											"copyCommandSettings": {},
 											"tableOption": "autoCreate"
 										},
 										"enableStaging": true,
@@ -289,8 +287,8 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "Copy data1",
-						"type": "Copy",
+						"name": "Lookup",
+						"type": "Lookup",
 						"dependsOn": [],
 						"policy": {
 							"timeout": "7.00:00:00",
@@ -307,37 +305,12 @@
 								"queryTimeout": "02:00:00",
 								"partitionOption": "None"
 							},
-							"sink": {
-								"type": "SqlPoolSink",
-								"allowCopyCommand": true,
-								"copyCommandSettings": {},
-								"tableOption": "autoCreate"
-							},
-							"enableStaging": true,
-							"stagingSettings": {
-								"linkedServiceName": {
-									"referenceName": "AzureDataLakeStorageLS",
-									"type": "LinkedServiceReference"
-								},
-								"path": "synapsecontainer"
-							}
-						},
-						"inputs": [
-							{
+							"dataset": {
 								"referenceName": "SqlServerDS",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
-						],
-						"outputs": [
-							{
-								"referenceName": "SqlPoolTableDS",
-								"type": "DatasetReference",
-								"parameters": {
-									"table": "customer"
-								}
-							}
-						]
+						}
 					}
 				],
 				"policy": {
@@ -347,9 +320,7 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('workspaceId'), '/datasets/SqlServerDS')]",
-				"[concat(variables('workspaceId'), '/datasets/SqlPoolTableDS')]",
-				"[concat(variables('workspaceId'), '/linkedServices/AzureDataLakeStorageLS')]"
+				"[concat(variables('workspaceId'), '/datasets/SqlServerDS')]"
 			]
 		},
 		{
@@ -804,6 +775,24 @@
 			},
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/linkedServices/empAzureDB_LS')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/notablepoolDS')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "SqlPoolTable",
+				"schema": [],
+				"typeProperties": {},
+				"sqlPool": {
+					"referenceName": "synapseSQLDB",
+					"type": "SqlPoolReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/sqlPools/synapseSQLDB')]"
 			]
 		},
 		{
