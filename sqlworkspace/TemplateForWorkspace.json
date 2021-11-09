@@ -182,7 +182,7 @@
 						}
 					},
 					{
-						"name": "Iterate lookup tables",
+						"name": "LoadToDataLake",
 						"type": "ForEach",
 						"dependsOn": [
 							{
@@ -200,7 +200,7 @@
 							},
 							"activities": [
 								{
-									"name": "Copy to DL",
+									"name": "Local - DL - POOL DB Staging",
 									"type": "Copy",
 									"dependsOn": [],
 									"policy": {
@@ -218,38 +218,18 @@
 											"partitionOption": "None"
 										},
 										"sink": {
-											"type": "DelimitedTextSink",
-											"storeSettings": {
-												"type": "AzureBlobFSWriteSettings"
-											},
-											"formatSettings": {
-												"type": "DelimitedTextWriteSettings",
-												"quoteAllText": true,
-												"fileExtension": ".csv"
-											}
+											"type": "SqlPoolSink",
+											"allowCopyCommand": true,
+											"copyCommandSettings": {},
+											"tableOption": "autoCreate"
 										},
-										"enableStaging": false,
-										"logSettings": {
-											"enableCopyActivityLog": true,
-											"copyActivityLogSettings": {
-												"logLevel": "Info",
-												"enableReliableLogging": false
+										"enableStaging": true,
+										"stagingSettings": {
+											"linkedServiceName": {
+												"referenceName": "AzureDataLakeStorageLS",
+												"type": "LinkedServiceReference"
 											},
-											"logLocationSettings": {
-												"linkedServiceName": {
-													"referenceName": "AzureBlobStorageLS",
-													"type": "LinkedServiceReference"
-												},
-												"path": "blob01/DataLakeOutput"
-											}
-										},
-										"translator": {
-											"type": "TabularTranslator",
-											"typeConversion": true,
-											"typeConversionSettings": {
-												"allowDataTruncation": true,
-												"treatBooleanAsNumber": false
-											}
+											"path": "synapsecontainer"
 										}
 									},
 									"inputs": [
@@ -270,17 +250,14 @@
 									],
 									"outputs": [
 										{
-											"referenceName": "SynapseDataLakeDS",
+											"referenceName": "pool_ds",
 											"type": "DatasetReference",
 											"parameters": {
-												"folderName": {
-													"value": "@item().dest_schema",
+												"schema": {
+													"value": "@concat('stg_',item().Src_schema)",
 													"type": "Expression"
 												},
-												"fileName": {
-													"value": "@item().dest_table",
-													"type": "Expression"
-												}
+												"table": "@item().Src_table"
 											}
 										}
 									]
@@ -298,8 +275,8 @@
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/datasets/SqlServerDS')]",
 				"[concat(variables('workspaceId'), '/datasets/sqlServerDSWithParam')]",
-				"[concat(variables('workspaceId'), '/datasets/SynapseDataLakeDS')]",
-				"[concat(variables('workspaceId'), '/linkedServices/AzureBlobStorageLS')]"
+				"[concat(variables('workspaceId'), '/datasets/pool_ds')]",
+				"[concat(variables('workspaceId'), '/linkedServices/AzureDataLakeStorageLS')]"
 			]
 		},
 		{
@@ -665,6 +642,33 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/SynapaseDL_CSV_DS')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureDataLakeStorageLS",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "Purchasing",
+						"fileSystem": "synapsecontainer"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/AzureDataLakeStorageLS')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/SynapseDataLakeDS')]",
 			"type": "Microsoft.Synapse/workspaces/datasets",
 			"apiVersion": "2019-06-01-preview",
@@ -739,6 +743,41 @@
 			},
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/linkedServices/empAzureDB_LS')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/pool_ds')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"parameters": {
+					"schema": {
+						"type": "string"
+					},
+					"table": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "SqlPoolTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": {
+						"value": "@dataset().schema",
+						"type": "Expression"
+					},
+					"table": {
+						"value": "@dataset().table",
+						"type": "Expression"
+					}
+				},
+				"sqlPool": {
+					"referenceName": "synapseSQLDB",
+					"type": "SqlPoolReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/sqlPools/synapseSQLDB')]"
 			]
 		},
 		{
