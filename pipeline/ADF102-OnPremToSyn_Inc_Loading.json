@@ -149,12 +149,27 @@
 								"source": {
 									"type": "AzureSqlSource",
 									"sqlReaderStoredProcedureName": "[dbo].[cleanUpAW]",
+									"storedProcedureParameters": {
+										"schema": {
+											"type": "String",
+											"value": "@item().Src_schema"
+										},
+										"table": {
+											"type": "String",
+											"value": "@item().Src_table"
+										}
+									},
 									"queryTimeout": "02:00:00",
 									"partitionOption": "None"
 								},
 								"sink": {
 									"type": "SqlPoolSink",
-									"allowCopyCommand": true,
+									"allowPolyBase": true,
+									"polyBaseSettings": {
+										"rejectValue": 0,
+										"rejectType": "value",
+										"useTypeDefault": true
+									},
 									"tableOption": "autoCreate"
 								},
 								"enableStaging": false
