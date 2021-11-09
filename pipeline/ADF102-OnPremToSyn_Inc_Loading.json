@@ -168,8 +168,8 @@
 									"referenceName": "empAzureDB_DS",
 									"type": "DatasetReference",
 									"parameters": {
-										"tablename": "@item().Src_schema",
-										"schemaname": "@item().Src_table"
+										"tablename": "@item().stg_schema",
+										"schemaname": "@item().dest_table"
 									}
 								}
 							],
