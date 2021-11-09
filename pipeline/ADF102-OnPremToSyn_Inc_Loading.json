@@ -47,7 +47,7 @@
 					},
 					"activities": [
 						{
-							"name": "Copy to Stage",
+							"name": "Copy to DL",
 							"type": "Copy",
 							"dependsOn": [],
 							"policy": {
@@ -65,9 +65,15 @@
 									"partitionOption": "None"
 								},
 								"sink": {
-									"type": "AzureSqlSink",
-									"tableOption": "autoCreate",
-									"disableMetricsCollection": false
+									"type": "DelimitedTextSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									},
+									"formatSettings": {
+										"type": "DelimitedTextWriteSettings",
+										"quoteAllText": true,
+										"fileExtension": ".csv"
+									}
 								},
 								"enableStaging": false,
 								"logSettings": {
@@ -111,68 +117,18 @@
 							],
 							"outputs": [
 								{
-									"referenceName": "empAzureDB_DS",
+									"referenceName": "SynapseDataLakeDS",
 									"type": "DatasetReference",
 									"parameters": {
-										"tablename": {
-											"value": "@item().dest_table",
+										"folderName": {
+											"value": "@item().dest_schema",
 											"type": "Expression"
 										},
-										"schemaname": {
-											"value": "@item().stg_schema",
+										"fileName": {
+											"value": "@item().dest_table",
 											"type": "Expression"
 										}
 									}
-								}
-							]
-						},
-						{
-							"name": "Copy data from stg to synapse",
-							"type": "Copy",
-							"dependsOn": [
-								{
-									"activity": "Copy to Stage",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
-							"policy": {
-								"timeout": "7.00:00:00",
-								"retry": 0,
-								"retryIntervalInSeconds": 30,
-								"secureOutput": false,
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"source": {
-									"type": "AzureSqlSource",
-									"sqlReaderQuery": "execute cleanUpAW @item().stg_schema, @item().dest_table",
-									"queryTimeout": "02:00:00",
-									"partitionOption": "None"
-								},
-								"sink": {
-									"type": "SqlPoolSink",
-									"allowCopyCommand": true,
-									"tableOption": "autoCreate"
-								},
-								"enableStaging": false
-							},
-							"inputs": [
-								{
-									"referenceName": "empAzureDB_DS",
-									"type": "DatasetReference",
-									"parameters": {
-										"tablename": "@item().stg_schema",
-										"schemaname": "@item().dest_table"
-									}
-								}
-							],
-							"outputs": [
-								{
-									"referenceName": "SqlPoolTableDS",
-									"type": "DatasetReference"
 								}
 							]
 						}
