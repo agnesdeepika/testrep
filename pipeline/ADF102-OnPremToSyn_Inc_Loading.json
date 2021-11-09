@@ -47,7 +47,7 @@
 					},
 					"activities": [
 						{
-							"name": "Upload to DL",
+							"name": "Local - DL - POOL DB Staging",
 							"type": "Copy",
 							"dependsOn": [],
 							"policy": {
@@ -65,38 +65,17 @@
 									"partitionOption": "None"
 								},
 								"sink": {
-									"type": "DelimitedTextSink",
-									"storeSettings": {
-										"type": "AzureBlobFSWriteSettings"
-									},
-									"formatSettings": {
-										"type": "DelimitedTextWriteSettings",
-										"quoteAllText": true,
-										"fileExtension": ".csv"
-									}
+									"type": "SqlPoolSink",
+									"allowCopyCommand": true,
+									"tableOption": "autoCreate"
 								},
-								"enableStaging": false,
-								"logSettings": {
-									"enableCopyActivityLog": true,
-									"copyActivityLogSettings": {
-										"logLevel": "Info",
-										"enableReliableLogging": false
+								"enableStaging": true,
+								"stagingSettings": {
+									"linkedServiceName": {
+										"referenceName": "AzureDataLakeStorageLS",
+										"type": "LinkedServiceReference"
 									},
-									"logLocationSettings": {
-										"linkedServiceName": {
-											"referenceName": "AzureBlobStorageLS",
-											"type": "LinkedServiceReference"
-										},
-										"path": "blob01/DataLakeOutput"
-									}
-								},
-								"translator": {
-									"type": "TabularTranslator",
-									"typeConversion": true,
-									"typeConversionSettings": {
-										"allowDataTruncation": true,
-										"treatBooleanAsNumber": false
-									}
+									"path": "synapsecontainer"
 								}
 							},
 							"inputs": [
@@ -117,63 +96,20 @@
 							],
 							"outputs": [
 								{
-									"referenceName": "SynapseDataLakeDS",
+									"referenceName": "pool_ds",
 									"type": "DatasetReference",
 									"parameters": {
-										"folderName": {
-											"value": "@item().dest_schema",
+										"schema": {
+											"value": "@concat('stg_',item().Src_schema)",
 											"type": "Expression"
 										},
-										"fileName": {
-											"value": "@item().dest_table",
-											"type": "Expression"
-										}
+										"table": "@item().Src_table"
 									}
 								}
 							]
 						}
 					]
 				}
-			},
-			{
-				"name": "DataLakeToStagingDB",
-				"type": "Copy",
-				"dependsOn": [
-					{
-						"activity": "LoadToDataLake",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"source": {
-						"type": "DelimitedTextSource",
-						"storeSettings": {
-							"type": "AzureBlobFSReadSettings",
-							"recursive": true,
-							"enablePartitionDiscovery": false
-						},
-						"formatSettings": {
-							"type": "DelimitedTextReadSettings"
-						}
-					},
-					"enableStaging": false
-				},
-				"inputs": [
-					{
-						"referenceName": "SynapseDataLakeDS",
-						"type": "DatasetReference"
-					}
-				]
 			}
 		],
 		"annotations": []
