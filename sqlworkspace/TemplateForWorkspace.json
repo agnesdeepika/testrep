@@ -182,7 +182,7 @@
 						}
 					},
 					{
-						"name": "LoadToDataLake",
+						"name": "LoadToStaging",
 						"type": "ForEach",
 						"dependsOn": [
 							{
@@ -254,10 +254,13 @@
 											"type": "DatasetReference",
 											"parameters": {
 												"schema": {
-													"value": "@item().Src_schema",
+													"value": "stage_onpremisedata",
 													"type": "Expression"
 												},
-												"table": "@item().Src_table"
+												"table": {
+													"value": "@concat(item().src_schema,item().src_table)",
+													"type": "Expression"
+												}
 											}
 										}
 									]
@@ -1122,7 +1125,7 @@
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
 				"content": {
-					"query": "select * from sales.salestaxrate",
+					"query": "select * from sales.salestaxrate\n\ncreate schema stage_onpremisedata",
 					"metadata": {
 						"language": "sql"
 					},
