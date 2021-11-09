@@ -332,7 +332,7 @@
 								"referenceName": "SqlPoolTableDS",
 								"type": "DatasetReference",
 								"parameters": {
-									"table": "VBAK"
+									"table": "customer"
 								}
 							}
 						]
@@ -1181,7 +1181,7 @@
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
 				"content": {
-					"query": "select * from sales.salestaxrate\n\ncreate schema stage_onpremisedata\n\ndrop table stg_Purchasing.PurchaseOrderHeader",
+					"query": "select * from sales.salestaxrate\n\ncreate schema stage_onpremisedata\n\ndrop table VBAK;\n\ndrop schema Purchasing;\n\n",
 					"metadata": {
 						"language": "sql"
 					},
