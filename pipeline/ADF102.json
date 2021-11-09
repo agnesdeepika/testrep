@@ -16,26 +16,28 @@
 				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "DelimitedTextSource",
-						"storeSettings": {
-							"type": "AzureBlobFSReadSettings",
-							"recursive": true,
-							"enablePartitionDiscovery": false
-						},
-						"formatSettings": {
-							"type": "DelimitedTextReadSettings"
-						}
+						"type": "SqlServerSource",
+						"sqlReaderQuery": "\tselect * from INFORMATION_SCHEMA.TABLES where TABLE_TYPE = 'BASE TABLE' AND TABLE_SCHEMA = 'Purchasing';",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
 					},
 					"sink": {
 						"type": "SqlPoolSink",
 						"allowCopyCommand": true,
 						"tableOption": "autoCreate"
 					},
-					"enableStaging": false
+					"enableStaging": true,
+					"stagingSettings": {
+						"linkedServiceName": {
+							"referenceName": "AzureDataLakeStorageLS",
+							"type": "LinkedServiceReference"
+						},
+						"path": "synapsecontainer"
+					}
 				},
 				"inputs": [
 					{
-						"referenceName": "SynapaseDL_CSV_DS",
+						"referenceName": "SqlServerDS",
 						"type": "DatasetReference"
 					}
 				],

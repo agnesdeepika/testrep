@@ -10,7 +10,6 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": "customer.csv",
 				"folderPath": "DataLakeOutput",
 				"fileSystem": "blob01"
 			},
