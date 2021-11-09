@@ -289,13 +289,53 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "Wait1",
-						"type": "Wait",
+						"name": "Copy data1",
+						"type": "Copy",
 						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
 						"userProperties": [],
 						"typeProperties": {
-							"waitTimeInSeconds": 1
-						}
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "SqlPoolSink",
+								"allowCopyCommand": true,
+								"copyCommandSettings": {},
+								"tableOption": "autoCreate"
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "SynapaseDL_CSV_DS",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "SqlPoolTableDS",
+								"type": "DatasetReference",
+								"parameters": {
+									"table": "VBAK"
+								}
+							}
+						]
 					}
 				],
 				"policy": {
@@ -304,7 +344,10 @@
 				},
 				"annotations": []
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/datasets/SynapaseDL_CSV_DS')]",
+				"[concat(variables('workspaceId'), '/datasets/SqlPoolTableDS')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('workspaceName'), '/SAP to SYNAPSE DL')]",
@@ -613,10 +656,20 @@
 			"type": "Microsoft.Synapse/workspaces/datasets",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
+				"parameters": {
+					"table": {
+						"type": "string"
+					}
+				},
 				"annotations": [],
 				"type": "SqlPoolTable",
 				"schema": [],
-				"typeProperties": {},
+				"typeProperties": {
+					"table": {
+						"value": "@dataset().table",
+						"type": "Expression"
+					}
+				},
 				"sqlPool": {
 					"referenceName": "synapseSQLDB",
 					"type": "SqlPoolReference"
@@ -658,11 +711,14 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobFSLocation",
-						"folderPath": "Purchasing",
-						"fileSystem": "synapsecontainer"
+						"fileName": "VBAK",
+						"folderPath": "DataLakeOutput",
+						"fileSystem": "blob01"
 					},
 					"columnDelimiter": ",",
-					"escapeChar": "\\",
+					"rowDelimiter": "\n",
+					"escapeChar": "\"",
+					"firstRowAsHeader": true,
 					"quoteChar": "\""
 				},
 				"schema": []
