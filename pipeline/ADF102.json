@@ -3,8 +3,8 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Copy data1",
-				"type": "Copy",
+				"name": "Lookup",
+				"type": "Lookup",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
@@ -21,35 +21,11 @@
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
-					"sink": {
-						"type": "SqlPoolSink",
-						"allowCopyCommand": true,
-						"tableOption": "autoCreate"
-					},
-					"enableStaging": true,
-					"stagingSettings": {
-						"linkedServiceName": {
-							"referenceName": "AzureDataLakeStorageLS",
-							"type": "LinkedServiceReference"
-						},
-						"path": "synapsecontainer"
-					}
-				},
-				"inputs": [
-					{
+					"dataset": {
 						"referenceName": "SqlServerDS",
 						"type": "DatasetReference"
 					}
-				],
-				"outputs": [
-					{
-						"referenceName": "SqlPoolTableDS",
-						"type": "DatasetReference",
-						"parameters": {
-							"table": "customer"
-						}
-					}
-				]
+				}
 			}
 		],
 		"annotations": []

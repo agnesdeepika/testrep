@@ -1,0 +1,12 @@
+{
+	"name": "notablepoolDS",
+	"properties": {
+		"annotations": [],
+		"type": "SqlPoolTable",
+		"schema": [],
+		"sqlPool": {
+			"referenceName": "synapseSQLDB",
+			"type": "SqlPoolReference"
+		}
+	}
+}
