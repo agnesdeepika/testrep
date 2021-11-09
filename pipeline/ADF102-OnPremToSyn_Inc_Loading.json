@@ -148,17 +148,13 @@
 							"typeProperties": {
 								"source": {
 									"type": "AzureSqlSource",
+									"sqlReaderQuery": "execute cleanUpAW @item().stg_schema, @item().dest_table",
 									"queryTimeout": "02:00:00",
 									"partitionOption": "None"
 								},
 								"sink": {
 									"type": "SqlPoolSink",
-									"allowPolyBase": true,
-									"polyBaseSettings": {
-										"rejectValue": 0,
-										"rejectType": "value",
-										"useTypeDefault": true
-									},
+									"allowCopyCommand": true,
 									"tableOption": "autoCreate"
 								},
 								"enableStaging": false
