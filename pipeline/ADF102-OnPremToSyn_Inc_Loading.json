@@ -127,8 +127,8 @@
 							]
 						},
 						{
-							"name": "Exec Transformation",
-							"type": "SqlServerStoredProcedure",
+							"name": "Copy data from stg to synapse",
+							"type": "Copy",
 							"dependsOn": [
 								{
 									"activity": "Copy to Stage",
@@ -146,28 +146,35 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"storedProcedureName": "[dbo].[cleanUpAW]",
-								"storedProcedureParameters": {
-									"schema": {
-										"value": {
-											"value": "@item().stg_schema",
-											"type": "Expression"
-										},
-										"type": "String"
-									},
-									"table": {
-										"value": {
-											"value": "@item().dest_table",
-											"type": "Expression"
-										},
-										"type": "String"
+								"source": {
+									"type": "AzureSqlSource",
+									"sqlReaderStoredProcedureName": "[dbo].[cleanUpAW]",
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "SqlPoolSink",
+									"allowCopyCommand": true,
+									"tableOption": "autoCreate"
+								},
+								"enableStaging": false
+							},
+							"inputs": [
+								{
+									"referenceName": "empAzureDB_DS",
+									"type": "DatasetReference",
+									"parameters": {
+										"tablename": "@item().Src_schema",
+										"schemaname": "@item().Src_table"
 									}
 								}
-							},
-							"linkedServiceName": {
-								"referenceName": "empAzureDB_LS",
-								"type": "LinkedServiceReference"
-							}
+							],
+							"outputs": [
+								{
+									"referenceName": "SqlPoolTableDS",
+									"type": "DatasetReference"
+								}
+							]
 						}
 					]
 				}
