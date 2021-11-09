@@ -1125,7 +1125,7 @@
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
 				"content": {
-					"query": "select * from sales.salestaxrate\n\ncreate schema stage_onpremisedata",
+					"query": "select * from sales.salestaxrate\n\ncreate schema stage_onpremisedata\n\ndrop table stg_Purchasing.PurchaseOrderHeader",
 					"metadata": {
 						"language": "sql"
 					},
