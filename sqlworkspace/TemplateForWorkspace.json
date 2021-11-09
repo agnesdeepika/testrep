@@ -711,7 +711,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobFSLocation",
-						"fileName": "VBAK",
+						"fileName": "customer.csv",
 						"folderPath": "DataLakeOutput",
 						"fileSystem": "blob01"
 					},
