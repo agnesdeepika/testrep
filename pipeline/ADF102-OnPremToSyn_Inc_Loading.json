@@ -100,7 +100,7 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"schema": {
-											"value": "@concat('stg_',item().Src_schema)",
+											"value": "@item().Src_schema",
 											"type": "Expression"
 										},
 										"table": "@item().Src_table"
