@@ -254,11 +254,11 @@
 											"type": "DatasetReference",
 											"parameters": {
 												"schema": {
-													"value": "stage_onpremisedata",
+													"value": "@item().src_schema",
 													"type": "Expression"
 												},
 												"table": {
-													"value": "@concat(item().src_schema,item().src_table)",
+													"value": "@item().src_table",
 													"type": "Expression"
 												}
 											}
