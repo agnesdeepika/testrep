@@ -302,15 +302,10 @@
 						"userProperties": [],
 						"typeProperties": {
 							"source": {
-								"type": "DelimitedTextSource",
-								"storeSettings": {
-									"type": "AzureBlobFSReadSettings",
-									"recursive": true,
-									"enablePartitionDiscovery": false
-								},
-								"formatSettings": {
-									"type": "DelimitedTextReadSettings"
-								}
+								"type": "SqlServerSource",
+								"sqlReaderQuery": "\tselect * from INFORMATION_SCHEMA.TABLES where TABLE_TYPE = 'BASE TABLE' AND TABLE_SCHEMA = 'Purchasing';",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
 							},
 							"sink": {
 								"type": "SqlPoolSink",
@@ -318,11 +313,18 @@
 								"copyCommandSettings": {},
 								"tableOption": "autoCreate"
 							},
-							"enableStaging": false
+							"enableStaging": true,
+							"stagingSettings": {
+								"linkedServiceName": {
+									"referenceName": "AzureDataLakeStorageLS",
+									"type": "LinkedServiceReference"
+								},
+								"path": "synapsecontainer"
+							}
 						},
 						"inputs": [
 							{
-								"referenceName": "SynapaseDL_CSV_DS",
+								"referenceName": "SqlServerDS",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -345,8 +347,9 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('workspaceId'), '/datasets/SynapaseDL_CSV_DS')]",
-				"[concat(variables('workspaceId'), '/datasets/SqlPoolTableDS')]"
+				"[concat(variables('workspaceId'), '/datasets/SqlServerDS')]",
+				"[concat(variables('workspaceId'), '/datasets/SqlPoolTableDS')]",
+				"[concat(variables('workspaceId'), '/linkedServices/AzureDataLakeStorageLS')]"
 			]
 		},
 		{
@@ -711,7 +714,6 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobFSLocation",
-						"fileName": "customer.csv",
 						"folderPath": "DataLakeOutput",
 						"fileSystem": "blob01"
 					},
@@ -1182,6 +1184,26 @@
 			"properties": {
 				"content": {
 					"query": "select * from sales.salestaxrate\n\ncreate schema stage_onpremisedata\n\ndrop table VBAK;\n\ndrop schema Purchasing;\n\n",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "synapseSQLDB",
+						"poolName": "synapseSQLDB"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/SQL script 2')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "select * from dbo.customer",
 					"metadata": {
 						"language": "sql"
 					},
