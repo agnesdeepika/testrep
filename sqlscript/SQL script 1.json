@@ -2,7 +2,7 @@
 	"name": "SQL script 1",
 	"properties": {
 		"content": {
-			"query": "select * from sales.salestaxrate",
+			"query": "select * from sales.salestaxrate\n\ncreate schema stage_onpremisedata",
 			"metadata": {
 				"language": "sql"
 			},
